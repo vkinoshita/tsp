@@ -9,7 +9,7 @@ If you are in an Windows environment, installing Anaconda can help you with some
 
 After you setup everything, just run `$ pip install -r requirements.txt`.
 
-## Running algorithms
+## How to run the algorithms
 
 In the project root, the base command is:
 
@@ -41,3 +41,5 @@ $ python main.py --solver brute-force --rand-size 10 --plot
 
 $ python main.py --solver greedy --plot --plot-to-file images/greedy/2.png
 ```
+
+Feel free to read or change the code by yourself, it's pretty simple.
