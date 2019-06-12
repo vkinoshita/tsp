@@ -28,7 +28,7 @@ You can setup many options to solve the TSP:
 |`-b <n1> <n2> <n3>` or `--benchmark <n1> <n2> <n3>` | From `n1` points randomly generated to `n2` points randomly generated, repeating `n3` times each. |
 |`-z <file-name>` or `--benchmark-file <file-name>` | Saves the benchmark, described above, to a `file-name`. |
 
-If you does not have [Gurobi](https://python-mip.readthedocs.io/en/latest/install.html) installed, look for `model = Model(solver_name='gurobi')` in `mip.py` and change each one of them to `model = Model(solver_name='cbc')`. I'm too lazy to make a conditional to use CBC or Gurobi.
+If you do not have [Gurobi](https://python-mip.readthedocs.io/en/latest/install.html) installed, look for `model = Model(solver_name='gurobi')` in `mip.py` and change each one of them to `model = Model(solver_name='cbc')`. I'm too lazy to make a conditional to use CBC or Gurobi.
 
 Examples:
 
