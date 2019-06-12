@@ -19,7 +19,7 @@ $ python main.py <options>
 
 You can setup many options to solve the TSP:
 
-| Parameter | Description |
+| Options | Description |
 | - | - |
 |`-r <n>` or `--rand-size <n>` | `n` is desired points in the graph randomly generated. |
 |`-p` or `--plot` | Pops up a window showing a plotted solution. |
