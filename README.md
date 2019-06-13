@@ -43,3 +43,15 @@ $ python main.py --solver greedy --plot --plot-to-file images/greedy/2.png
 ```
 
 Feel free to read or change the code by yourself, it's pretty simple.
+
+### Greedy algorithm
+
+![](greedy_300.gif)
+
+### 3-opt
+
+![](3_opt_300.gif)
+
+### Integer programming
+
+![](mip_100.gif)
