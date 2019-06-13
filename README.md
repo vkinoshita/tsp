@@ -51,3 +51,7 @@ Feel free to read or change the code by yourself, it's pretty simple.
 ### 3-opt
 
 ![](3_opt_300.gif)
+
+### Integer programming
+
+![](mip_100.gif)
