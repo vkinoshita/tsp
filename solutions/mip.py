@@ -93,7 +93,7 @@ def solve(matrix_of_distances, length, cycles):
         model += xsum(x[c[0]][c[1]] for c in cycle) <= cycle_len - 1
         model += xsum(x[c[1]][c[0]] for c in cycle) <= cycle_len - 1
 
-    model.optimize(max_seconds=30)
+    model.optimize(max_seconds=300)
 
     arcs = [(i, j) for i in range(length) for j in range(length) if x[i][j].x >= 0.99]
     best_distance = calculate_total_dist_by_arcs(matrix_of_distances, arcs)
@@ -149,7 +149,7 @@ def solve_tsp_by_mip_with_sub_cycles_2(tsp_matrix):
         model += (xsum(x[i][j] for j in range(0, i)) + xsum(x[j][i] for j in range(i + 1, total_length))) == 2
 
     while len(found_cycles) != 1:
-        model.optimize(max_seconds=30)
+        model.optimize(max_seconds=300)
 
         arcs = [(i, j) for i in range(total_length) for j in range(total_length) if x[i][j].x >= 0.99]
         best_distance = calculate_total_dist_by_arcs(matrix_of_distances, arcs)
@@ -157,11 +157,20 @@ def solve_tsp_by_mip_with_sub_cycles_2(tsp_matrix):
         found_cycles = get_cycle(arcs)
         
         for cycle in found_cycles:
+            points = {}
+            for arc in cycle:
+                points = {*points, arc[0]}
+                points = {*points, arc[1]}
+            possible_arcs = []
+            points_temp = points.copy()
+            for p in points:
+                points_temp.remove(p)
+                for pt in points_temp:
+                    possible_arcs = [*possible_arcs, (p, pt)]
             cycle_len = len(cycle)
-            model += xsum(x[c[0]][c[1]] for c in cycle) <= cycle_len - 1
-            model += xsum(x[c[1]][c[0]] for c in cycle) <= cycle_len - 1
+            model += xsum(x[arc[0]][arc[1]] + x[arc[1]][arc[0]] for arc in possible_arcs) <= cycle_len - 1
 
-        # plot_connected_tsp_points_from_arcs(tsp_matrix, arcs, 'images/mip_sub_cycles/{}'.format(iteration))
+        plot_connected_tsp_points_from_arcs(tsp_matrix, arcs, '../images/mip_300/{}'.format(iteration))
         print(iteration)
         iteration += 1
 
