@@ -7,34 +7,40 @@ from solutions.mip import solve_tsp_by_mip, solve_tsp_by_mip_with_sub_cycles, so
 from solutions.opt_3 import solve_tsp_by_3_opt
 from tools.configs import tsp_base_file_name, tsp_sample_size
 from tools.plotter import plot_connected_tsp_points, plot_connected_tsp_points_from_arcs
-from tools.generator import get_n_random_x_y
+from tools.generator import get_n_random_x_y, get_n_random_x_y_as_integer
 
 
 def main():
     solvers = {
         'brute-force': {
             'solver': solve_tsp_by_brute_force,
-            'plotter': plot_connected_tsp_points
+            'plotter': plot_connected_tsp_points,
+            'generator': get_n_random_x_y,
         },
         'greedy': {
             'solver': solve_tsp_by_greedy_method,
-            'plotter': plot_connected_tsp_points
+            'plotter': plot_connected_tsp_points,
+            'generator': get_n_random_x_y,
         },
         'mip': {
             'solver': solve_tsp_by_mip,
-            'plotter': plot_connected_tsp_points_from_arcs
+            'plotter': plot_connected_tsp_points_from_arcs,
+            'generator': get_n_random_x_y_as_integer,
         },
         'mip-s': {
             'solver': solve_tsp_by_mip_with_sub_cycles,
-            'plotter': plot_connected_tsp_points_from_arcs
+            'plotter': plot_connected_tsp_points_from_arcs,
+            'generator': get_n_random_x_y_as_integer,
         },
         'mip-s-2': {
             'solver': solve_tsp_by_mip_with_sub_cycles_2,
-            'plotter': plot_connected_tsp_points_from_arcs
+            'plotter': plot_connected_tsp_points_from_arcs,
+            'generator': get_n_random_x_y_as_integer,
         },
         '3-opt': {
             'solver': solve_tsp_by_3_opt,
-            'plotter': plot_connected_tsp_points
+            'plotter': plot_connected_tsp_points,
+            'generator': get_n_random_x_y,
         },
     }
 
@@ -54,6 +60,7 @@ def main():
     
     solver = solvers[options.solver]['solver']
     plotter = solvers[options.solver]['plotter']
+    generator = solvers[options.solver]['generator']
 
     print('  rand size:', options.rand_size)
     print('should plot:', options.plot)
@@ -70,7 +77,7 @@ def main():
             else:
                 tsp_matrix = np.load(tsp_base_file_name)
         else:
-            tsp_matrix = get_n_random_x_y(options.rand_size)
+            tsp_matrix = generator(options.rand_size)
 
         tour, time_diff, distance = solver(tsp_matrix)
         print('    tour:', tour)
@@ -85,7 +92,7 @@ def main():
         print('size iteration distance     time')
         for n in range(options.benchmark[0], options.benchmark[1] + 1):
             for i in range(1, options.benchmark[2] + 1):
-                tsp_matrix = get_n_random_x_y(n)
+                tsp_matrix = generator(n)
                 tour, time_diff, distance = solver(tsp_matrix)
                 if options.benchmark_file:
                     with open(options.benchmark_file, "a") as f:
