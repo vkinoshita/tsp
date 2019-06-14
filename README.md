@@ -54,7 +54,7 @@ Feel free to read or change the code by yourself, it's pretty simple.
 
 ### Integer programming
 
-![](mip_100.gif)
+![](mip_300.gif)
 
 ### Brute force
 
