@@ -5,6 +5,7 @@ from mip.constants import BINARY
 from tools.calculators import calculate_total_dist_by_arcs, get_matrix_of_distances
 from tools.plotter import plot_connected_tsp_points_from_arcs
 from numpy import inf
+from itertools import permutations
 
 
 def solve_tsp_by_mip(tsp_matrix):
@@ -75,32 +76,6 @@ def get_cycle(arcs):
     return all_cycles
 
 
-def solve(matrix_of_distances, length, cycles):
-    model = Model(solver_name='gurobi')
-    model.verbose = 0
-
-    x = [[model.add_var(var_type=BINARY) for j in range(length)] for i in range(length)]
-
-    y = [model.add_var() for i in range(length)]
-
-    model.objective = xsum(matrix_of_distances[i][j]*x[i][j] for j in range(length) for i in range(length))
-
-    for i in range(length):
-        model += (xsum(x[i][j] for j in range(0, i)) + xsum(x[j][i] for j in range(i + 1, length))) == 2
-    
-    for cycle in cycles:
-        cycle_len = len(cycle)
-        model += xsum(x[c[0]][c[1]] for c in cycle) <= cycle_len - 1
-        model += xsum(x[c[1]][c[0]] for c in cycle) <= cycle_len - 1
-
-    model.optimize(max_seconds=300)
-
-    arcs = [(i, j) for i in range(length) for j in range(length) if x[i][j].x >= 0.99]
-    best_distance = calculate_total_dist_by_arcs(matrix_of_distances, arcs)
-
-    return arcs, best_distance
-
-
 def solve_tsp_by_mip_with_sub_cycles(tsp_matrix):
     start = time()
     matrix_of_distances = get_matrix_of_distances(tsp_matrix)
@@ -108,16 +83,35 @@ def solve_tsp_by_mip_with_sub_cycles(tsp_matrix):
     best_distance = sys.float_info.max
 
     found_cycles = []
-    cycles = []
     arcs = [(i, i + 1) for i in range(total_length - 1)]
 
     iteration = 0
+    
+    model = Model(solver_name='gurobi')
+    model.verbose = 0
+
+    x = [[model.add_var(var_type=BINARY) for j in range(total_length)] for i in range(total_length)]
+
+    y = [model.add_var() for i in range(total_length)]
+
+    model.objective = xsum(matrix_of_distances[i][j]*x[i][j] for j in range(total_length) for i in range(total_length))
+
+    for i in range(total_length):
+        model += (xsum(x[i][j] for j in range(0, i)) + xsum(x[j][i] for j in range(i + 1, total_length))) == 2
 
     while len(found_cycles) != 1:
-        arcs, best_distance = solve(matrix_of_distances, total_length, cycles)
+        model.optimize(max_seconds=300)
+
+        arcs = [(i, j) for i in range(total_length) for j in range(total_length) if x[i][j].x >= 0.99]
+        best_distance = calculate_total_dist_by_arcs(matrix_of_distances, arcs)
+
         found_cycles = get_cycle(arcs)
-        cycles = [*cycles, *found_cycles]
-        # plot_connected_tsp_points_from_arcs(tsp_matrix, arcs, 'images/mip_sub_cycles/{}'.format(iteration))
+        
+        for cycle in found_cycles:
+            cycle_len = len(cycle)
+            model += xsum(x[arc[0]][arc[1]] for arc in cycle) <= cycle_len - 1
+            model += xsum(x[arc[1]][arc[0]] for arc in cycle) <= cycle_len - 1
+
         print(iteration)
         iteration += 1
 
@@ -161,23 +155,12 @@ def solve_tsp_by_mip_with_sub_cycles_2(tsp_matrix):
             for arc in cycle:
                 points = {*points, arc[0]}
                 points = {*points, arc[1]}
-            possible_arcs = []
-            points_temp = points.copy()
-            for p in points:
-                points_temp.remove(p)
-                for pt in points_temp:
-                    possible_arcs = [*possible_arcs, (p, pt)]
             cycle_len = len(cycle)
-            model += xsum(x[arc[0]][arc[1]] + x[arc[1]][arc[0]] for arc in possible_arcs) <= cycle_len - 1
+            model += xsum(x[arc[0]][arc[1]] for arc in permutations(points, 2)) <= cycle_len - 1
 
-        # plot_connected_tsp_points_from_arcs(tsp_matrix, arcs, '../images/mip_300/{}'.format(iteration))
+        # plot_connected_tsp_points_from_arcs(tsp_matrix, arcs, '../images/mip_tcc_1000/{}'.format(iteration))
         print(iteration)
         iteration += 1
 
     time_diff = time() - start
     return arcs, time_diff, best_distance
-
-#        n: 500
-#     time: 15839.2320947647095
-
-
