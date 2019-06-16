@@ -131,7 +131,7 @@ def solve_tsp_by_mip_with_sub_cycles_2(tsp_matrix):
     iteration = 0
     
     model = Model(solver_name='gurobi')
-    model.verbose = 1
+    model.verbose = 0
 
     x = [[model.add_var(var_type=BINARY) for j in range(total_length)] for i in range(total_length)]
 
@@ -143,7 +143,7 @@ def solve_tsp_by_mip_with_sub_cycles_2(tsp_matrix):
         model += (xsum(x[i][j] for j in range(0, i)) + xsum(x[j][i] for j in range(i + 1, total_length))) == 2
 
     while len(found_cycles) != 1:
-        model.optimize(max_seconds=30000)
+        model.optimize(max_seconds=300)
 
         arcs = [(i, j) for i in range(total_length) for j in range(total_length) if x[i][j].x >= 0.99]
         best_distance = calculate_total_dist_by_arcs(matrix_of_distances, arcs)
