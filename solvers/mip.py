@@ -158,7 +158,7 @@ def solve_tsp_by_mip_with_sub_cycles_2(tsp_matrix):
             cycle_len = len(cycle)
             model += xsum(x[arc[0]][arc[1]] for arc in permutations(points, 2)) <= cycle_len - 1
 
-        plot_connected_tsp_points_from_arcs(tsp_matrix, arcs, '../images/mip_xql662/{}'.format(iteration))
+        # plot_connected_tsp_points_from_arcs(tsp_matrix, arcs, '../images/mip_xql662/{}'.format(iteration))
         print(iteration)
         iteration += 1
 

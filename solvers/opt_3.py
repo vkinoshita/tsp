@@ -75,7 +75,7 @@ def solve_tsp_by_3_opt(tsp_matrix):
     length = len(tsp_matrix)
     choice_range = list(range(length + 1))
     best_tour, best_distance = greedy(matrix_of_distances, 0)
-    plot_connected_tsp_points(tsp_matrix, best_tour, '../images/3_opt_xql662/0')
+    # plot_connected_tsp_points(tsp_matrix, best_tour, '../images/3_opt_xql662/0')
     number_of_iterations = 100 + (length - 10) * (10000000 - 100) / (1000.0 - 10.0)
     for count in range(1, int(number_of_iterations)):
         i, j, k = random_i_j_k(choice_range, length)
@@ -84,7 +84,7 @@ def solve_tsp_by_3_opt(tsp_matrix):
             total_dist = calculate_total_dist(matrix_of_distances, new_tour)
             if total_dist < best_distance:
                 best_tour = new_tour
-                plot_connected_tsp_points(tsp_matrix, new_tour, '../images/3_opt_xql662/{}'.format(count))
+                # plot_connected_tsp_points(tsp_matrix, new_tour, '../images/3_opt_xql662/{}'.format(count))
                 best_distance = total_dist
     time_diff = time() - start
     return best_tour, time_diff, best_distance
