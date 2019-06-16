@@ -4,7 +4,7 @@ import numpy as np
 from solvers.brute_force import solve_tsp_by_brute_force
 from solvers.greedy import solve_tsp_by_greedy_method
 from solvers.mip import solve_tsp_by_mip, solve_tsp_by_mip_with_sub_cycles, solve_tsp_by_mip_with_sub_cycles_2
-from solvers.opt_3 import solve_tsp_by_3_opt
+from solvers.opt_3 import solve_tsp_by_3_opt, solve_tsp_by_3_opt_2
 from tools.configs import tsp_base_file_name, tsp_sample_size
 from tools.plotter import plot_connected_tsp_points, plot_connected_tsp_points_from_arcs
 from tools.generator import get_n_random_x_y, get_n_random_x_y_as_integer
@@ -22,6 +22,16 @@ def main():
             'plotter': plot_connected_tsp_points,
             'generator': get_n_random_x_y,
         },
+        '3-opt': {
+            'solver': solve_tsp_by_3_opt,
+            'plotter': plot_connected_tsp_points,
+            'generator': get_n_random_x_y,
+        },
+        '3-opt-2': {
+            'solver': solve_tsp_by_3_opt_2,
+            'plotter': plot_connected_tsp_points,
+            'generator': get_n_random_x_y,
+        },
         'mip': {
             'solver': solve_tsp_by_mip,
             'plotter': plot_connected_tsp_points_from_arcs,
@@ -36,11 +46,6 @@ def main():
             'solver': solve_tsp_by_mip_with_sub_cycles_2,
             'plotter': plot_connected_tsp_points_from_arcs,
             'generator': get_n_random_x_y_as_integer,
-        },
-        '3-opt': {
-            'solver': solve_tsp_by_3_opt,
-            'plotter': plot_connected_tsp_points,
-            'generator': get_n_random_x_y,
         },
     }
 
