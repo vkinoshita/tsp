@@ -33,32 +33,32 @@ def reverse_segment_if_better(matrix_of_distances, tour, i, j, k):
     d6 = matrix_of_distances[B,E] + matrix_of_distances[D,F] + matrix_of_distances[C,A]
     d7 = matrix_of_distances[A,D] + matrix_of_distances[E,B] + matrix_of_distances[C,F]
 
-    # 2-opt
-    elif d0 > d1:
-      return d0 - d1, reverse(tour, i, j - 1)
-    elif d0 > d2:
-      return d0 - d2, reverse(tour, j, k - 1)
-    elif d0 > d3:
-      return d0 - d3, reverse(tour, k, i - 1)
-
     # 3-opt
-    if d0 > d4:
-      tour = reverse(tour, j, k - 1)
-      tour = reverse(tour, k, i - 1)
-      return d0 - d4, tour
-    elif d0 > d5:
-      tour = reverse(tour, i, j - 1)
-      tour = reverse(tour, k, i - 1)
-      return d0 - d5, tour
-    elif d0 > d6:
-      tour = reverse(tour, i, j - 1)
-      tour = reverse(tour, j, k - 1)
-      return d0 - d6, tour
-    elif d0 > d7:
+    if d0 > d7:
       tour = reverse(tour, i, j - 1)
       tour = reverse(tour, j, k - 1)
       tour = reverse(tour, k, i - 1)
       return d0 - d7, tour
+    elif d0 > d6:
+      tour = reverse(tour, i, j - 1)
+      tour = reverse(tour, j, k - 1)
+      return d0 - d6, tour
+    elif d0 > d5:
+      tour = reverse(tour, i, j - 1)
+      tour = reverse(tour, k, i - 1)
+      return d0 - d5, tour
+    elif d0 > d4:
+      tour = reverse(tour, j, k - 1)
+      tour = reverse(tour, k, i - 1)
+      return d0 - d4, tour
+
+    # 2-opt
+    elif d0 > d3:
+      return d0 - d3, reverse(tour, k, i - 1)
+    elif d0 > d2:
+      return d0 - d2, reverse(tour, j, k - 1)
+    elif d0 > d1:
+      return d0 - d1, reverse(tour, i, j - 1)
 
     return 0, tour
 
